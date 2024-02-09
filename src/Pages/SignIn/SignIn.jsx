@@ -1,33 +1,29 @@
 import React from "react";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { userSignUpAsync } from "../../Data/Action/Auth.action/Auth.action";
-const SignUp = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+import { userSignInAsync } from "../../Data/Action/Auth.action/Auth.action";
+const SignIn = () => {
+  const dispatch =useDispatch()
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
-  const onSubmit = async (data) => {
+  const onSubmit = async(data) => {
     const userInfo = {
-      userName: data.name,
       email: data.email,
-      password: data.password,
-    };
-    console.log(userInfo);
-    const result = await dispatch(userSignUpAsync(userInfo));
-    if (result.type === "auth/userSignUpAsync/fulfilled") {
-      reset();
-     navigate("/signIn")
+      password:data.password
+    }
+    const result = await dispatch(userSignInAsync(userInfo))
+    if (result) {
+      reset()
     }
   };
   return (
-    <div className="w-96 mx-auto mt-20 bg-white shadow-md p-5 relative">
+    <div className="w-96 mx-auto mt-20 bg-white shadow-md p-8 relative">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5 mt-5">
           <div className="mb-2 block">
@@ -40,6 +36,7 @@ const SignUp = () => {
             {...register("name", { required: true })}
             shadow
           />
+          {errors.name && <span>This field is required</span>}
         </div>
         <div className="mb-5 mt-5">
           <div className="mb-2 block">
@@ -51,6 +48,9 @@ const SignUp = () => {
             {...register("email", { required: true })}
             shadow
           />
+          {errors.name && (
+            <span className="text-red-600">This field is required</span>
+          )}
         </div>
         <div>
           <div className="mb-2 block">
@@ -63,6 +63,9 @@ const SignUp = () => {
             {...register("password", { required: true })}
             shadow
           />
+          {errors.password && (
+            <span className="text-red-600">This field is required</span>
+          )}
         </div>
         <div className="flex items-center gap-2 mb-5 mt-5">
           <Checkbox {...register("checkbox", { required: true })} id="agree" />
@@ -76,22 +79,25 @@ const SignUp = () => {
             </Link>
           </Label>
         </div>
+        {errors.checkbox && (
+          <span className="text-red-600">This field is required</span>
+        )}
         <Button
-          className="w-full mb-3"
+          className="w-full mt-5"
           gradientDuoTone="purpleToBlue"
           type="submit"
         >
-          Register new account
+          Sign In
         </Button>
       </form>
       <p className=" absolute bottom-1 text-center">
-        Already Create a Account{" "}
-        <Link className="text-blue-600" to={"/signIn"}>
-          Sign In
+        Create a new account{" "}
+        <Link to={"/signUp"} className="text-blue-600">
+          SignUp
         </Link>
       </p>
     </div>
   );
 };
 
-export default SignUp;
+export default SignIn;
